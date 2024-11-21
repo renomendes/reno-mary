@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá de Casa Nova</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffe6f0;
+            margin: 0;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffe6f0;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: center;
+            padding: 10px;
+            color: #333;
+        }
+        th .title {
+            font-family: 'Georgia', serif;
+            font-size: 1.8rem; /* 20% maior */
+            font-style: italic;
+            font-weight: bold;
+        }
+        th .title .name {
+            font-size: 2.25rem; /* 50% maior */
+            color: #d14b8f;
+        }
+        th .suggestion {
+            font-size: 0.7rem; /* 30% menor */
+            font-weight: normal;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        td {
+            padding: 10px;
+            font-size: 1rem;
+            vertical-align: top;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #d14b8f;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #d14b8f;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+            width: 100%;
+        }
+        tr {
+            height: 2.5em;
+        }
+        html, body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <div class="title">
+                        Chá de casa nova <br>
+                        <span class="name">Mary</span>
+                    </div>
+                    <div class="suggestion">Sugestão de presentes</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="giftTable">
+            <!-- Campos gerados dinamicamente -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="button" onclick="saveData()">Salvar</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        // Lista de presentes
+        const gifts = [
+            "Toalha de banho", "Jogo de lençol", "Conjunto de talheres", "Jogo de pratos", 
+            "Panela de pressão", "Porta temperos", "Tapete para sala", "Almofadas decorativas", 
+            "Kit de banheiro", "Ferro de passar", "Liquidificador", "Conjunto de copos", 
+            "Frigideira antiaderente", "Bandeja de café da manhã", "Jarra de vidro", 
+            "Forma de bolo", "Jogo de panelas", "Abridor de vinho", "Espátula de silicone", 
+            "Relógio de parede"
+        ];
+
+        // Carregar dados salvos
+        function loadSavedData() {
+            try {
+                return JSON.parse(localStorage.getItem('giftData')) || {};
+            } catch {
+                return {};
+            }
+        }
+
+        // Salvar dados no localStorage
+        function saveData() {
+            const giftInputs = document.querySelectorAll('input');
+            const data = {};
+            giftInputs.forEach((input, index) => {
+                data[`present${index + 1}`] = input.value;
+            });
+            localStorage.setItem('giftData', JSON.stringify(data));
+            alert('Dados salvos com sucesso!');
+        }
+
+        // Inicializar tabela com presentes
+        function initTable() {
+            const savedData = loadSavedData();
+            const giftTable = document.getElementById('giftTable');
+            gifts.forEach((gift, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}. ${gift}</td>
+                    <td><input type="text" name="present${index + 1}" placeholder="Quem escolheu?" value="${savedData[`present${index + 1}`] || ''}"></td>
+                `;
+                giftTable.appendChild(row);
+            });
+        }
+
+        // Montar tabela ao carregar a página
+        initTable();
+    </script>
+</body>
+</html>
